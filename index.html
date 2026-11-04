@@ -1,0 +1,351 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farewell Countdown ❤️</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-family: 'Georgia', serif;
+
+    background: linear-gradient(
+        135deg,
+        #5387e7,
+        #d435ec,
+        #b45f70,
+        #f0a477
+    );
+}
+
+/* Background glow */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(
+        circle at 50% 50%,
+        rgba(255,210,180,0.2),
+        transparent 65%
+    );
+    pointer-events: none;
+}
+
+/* Falling petals */
+.petal {
+    position: absolute;
+    top: -50px;
+    font-size: 24px;
+    animation: fall linear infinite;
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-10vh) rotate(0deg);
+    }
+    100% {
+        transform: translateY(110vh) rotate(360deg);
+    }
+}
+
+/* Main card */
+.timer-container {
+    position: relative;
+    z-index: 2;
+    width: 90%;
+    max-width: 540px;
+    padding: 40px 25px;
+    text-align: center;
+
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(15px);
+
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 25px;
+
+    box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+}
+
+h1 {
+    font-size: 34px;
+    color: #ffe8d6;
+    letter-spacing: 3px;
+    text-shadow: 0 0 15px rgba(255,200,180,0.7);
+}
+
+.heart {
+    font-size: 38px;
+    animation: heartbeat 1.5s infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.subtitle {
+    color: #ffe2d4;
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 30px;
+}
+
+label {
+    color: white;
+}
+
+input {
+    width: 100%;
+    padding: 13px;
+    margin: 15px 0;
+    border: 1px solid #ffd3c2;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.9);
+    color: #493044;
+}
+
+button {
+    padding: 13px 30px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(45deg, #f5a6a6, #e8b5d2);
+    color: #492b48;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.06);
+    box-shadow: 0 5px 20px rgba(255,200,200,0.5);
+}
+
+.countdown {
+    display: flex;
+    gap: 10px;
+    margin-top: 35px;
+}
+
+.time-box {
+    flex: 1;
+    padding: 18px 5px;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 15px;
+    color: white;
+}
+
+.time-box span {
+    display: block;
+    font-size: 29px;
+    font-weight: bold;
+    color: #fff1dc;
+    text-shadow: 0 0 10px #ffc4c4;
+}
+
+.time-box small {
+    display: block;
+    margin-top: 8px;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+#message {
+    margin-top: 25px;
+    color: #fff1dc;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.footer {
+    margin-top: 30px;
+    color: #ffe1db;
+    font-size: 14px;
+    font-style: italic;
+    line-height: 1.8;
+}
+
+@media(max-width: 400px) {
+    h1 { font-size: 25px; }
+    .timer-container { padding: 30px 12px; }
+    .time-box span { font-size: 21px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Falling flowers -->
+<div id="petals"></div>
+
+<div class="timer-container">
+
+    <div class="heart">❤️</div>
+
+    <h1>THE GOODBYE</h1>
+
+    <p class="subtitle">
+        Every beautiful journey has an ending...<br>
+        But some memories last forever. ✨
+    </p>
+
+    <label>Select Our Last Day Together</label>
+
+    <input type="datetime-local" id="targetDate">
+
+    <br>
+
+    <button onclick="startTimer()">
+        Begin Countdown ❤️
+    </button>
+
+    <div class="countdown">
+
+        <div class="time-box">
+            <span id="days">00</span>
+            <small>DAYS</small>
+        </div>
+
+        <div class="time-box">
+            <span id="hours">00</span>
+            <small>HOURS</small>
+        </div>
+
+        <div class="time-box">
+            <span id="minutes">00</span>
+            <small>MINUTES</small>
+        </div>
+
+        <div class="time-box">
+            <span id="seconds">00</span>
+            <small>SECONDS</small>
+        </div>
+
+    </div>
+
+    <div id="message"></div>
+
+    <div class="footer">
+        "Goodbyes are not the end,<br>
+        they are memories waiting to be remembered." ❤️
+    </div>
+
+</div>
+
+<script>
+let timerInterval;
+
+function startTimer() {
+
+    clearInterval(timerInterval);
+
+    const selectedDate =
+        document.getElementById("targetDate").value;
+
+    if (!selectedDate) {
+        alert("Please select your farewell date!");
+        return;
+    }
+
+    const targetTime = new Date(selectedDate).getTime();
+
+    if (targetTime <= Date.now()) {
+        alert("Please select a future date!");
+        return;
+    }
+
+    document.getElementById("message").innerText = "";
+
+    function updateTimer() {
+
+        const difference = targetTime - Date.now();
+
+        if (difference <= 0) {
+
+            clearInterval(timerInterval);
+
+            ["days", "hours", "minutes", "seconds"]
+            .forEach(id => {
+                document.getElementById(id).innerText = "00";
+            });
+
+            document.getElementById("message").innerText =
+                "❤️ The journey ends, memories remain forever. ❤️";
+
+            return;
+        }
+
+        const days = Math.floor(
+            difference / (1000 * 60 * 60 * 24)
+        );
+
+        const hours = Math.floor(
+            (difference / (1000 * 60 * 60)) % 24
+        );
+
+        const minutes = Math.floor(
+            (difference / (1000 * 60)) % 60
+        );
+
+        const seconds = Math.floor(
+            (difference / 1000) % 60
+        );
+
+        document.getElementById("days").innerText =
+            String(days).padStart(2, "0");
+
+        document.getElementById("hours").innerText =
+            String(hours).padStart(2, "0");
+
+        document.getElementById("minutes").innerText =
+            String(minutes).padStart(2, "0");
+
+        document.getElementById("seconds").innerText =
+            String(seconds).padStart(2, "0");
+    }
+
+    updateTimer();
+    timerInterval = setInterval(updateTimer, 1000);
+}
+
+/* Generate falling petals */
+const petals = ["🌸", "🌹", "🌺", "🍂", "❤️", "✨"];
+
+for (let i = 0; i < 25; i++) {
+
+    const petal = document.createElement("div");
+
+    petal.className = "petal";
+    petal.innerText =
+        petals[Math.floor(Math.random() * petals.length)];
+
+    petal.style.left = Math.random() * 100 + "%";
+    petal.style.animationDuration =
+        (5 + Math.random() * 10) + "s";
+
+    petal.style.animationDelay =
+        Math.random() * 10 + "s";
+
+    petal.style.fontSize =
+        (15 + Math.random() * 20) + "px";
+
+    document.getElementById("petals").appendChild(petal);
+}
+</script>
+
+</body>
+</html>
