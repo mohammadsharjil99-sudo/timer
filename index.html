@@ -24,8 +24,8 @@ body {
         135deg,
         #5387e7,
         #d435ec,
-        #b45f70,
-        #f0a477
+        #ee3f62,
+        #f2884a
     );
 }
 
@@ -203,15 +203,11 @@ button:hover {
         But some memories last forever. ✨
     </p>
 
-    <label>Select Our Last Day Together</label>
+    <label>Last Day Together</label>
 
-    <input type="datetime-local" id="targetDate">
+    <input type="datetime-local" id="targetDate" value="2026-11-15T17:30" disabled>
 
     <br>
-
-    <button onclick="startTimer()">
-        Begin Countdown ❤️
-    </button>
 
     <div class="countdown">
 
@@ -323,7 +319,7 @@ function startTimer() {
 }
 
 /* Generate falling petals */
-const petals = ["🌸", "🌹", "🌺", "🍂", "❤️", "✨"];
+const petals = ["🌸", "🌹", "🌺", "🍂", "✨", '😍'];
 
 for (let i = 0; i < 25; i++) {
 
@@ -344,6 +340,7 @@ for (let i = 0; i < 25; i++) {
         (15 + Math.random() * 20) + "px";
 
     document.getElementById("petals").appendChild(petal);
+    startTimer();
 }
 </script>
 
